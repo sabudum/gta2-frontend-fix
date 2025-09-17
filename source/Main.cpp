@@ -2332,7 +2332,22 @@ public:
                             float rotDest = atan2f(x, y);
                             float rotCur = DegToRad(_this->GetPed()->m_pObject->m_nRotation / 4.0f);
                             float angle = LimitRadianAngle(rotDest);
-
+                            
+                            // --- NEW: apply input-based offset to angle --- Strafing mechanics
+                            int left     = (_this->m_bButtonLeft ? 1 : 0);
+                            int right    = (_this->m_bButtonRight ? 1 : 0);
+                            int forward  = (_this->m_bButtonForward ? 1 : 0);
+                            int back     = (_this->m_bButtonBack ? 1 : 0);
+                            
+                            int horiz = right - left;                          // -1, 0, +1
+                            float horizAngle = horiz * DegToRad(90.0f);         // -90°, 0°, +90°
+                            
+                            float fb = forward - back;                         // -1, 0, +1
+                            float vertFactor = (fb == 0 ? 1.0f : fb * 0.5f);     // 1.0, 0.5, -0.5
+                            
+                            angle += horizAngle * vertFactor;
+                            // -----------------------------------------------
+                            
                             if (rotCur - M_PI > rotDest) {
                                 angle += 2 * M_PI;
                             }
