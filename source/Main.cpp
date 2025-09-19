@@ -2355,7 +2355,11 @@ public:
 
                             short finalRot = static_cast<short>(RadToDeg((angle - rotCur) * plugin::GetTimeStepFix()));
                             _this->GetPed()->m_pObject->m_nRotation += finalRot;
-
+                            
+                            // If strafing without forward/back, make ped walk forward
+                            if ((horiz != 0) && (fb == 0)) {
+                                _this->m_bButtonForward = true;
+                            }
                             _this->m_bButtonLeft = false;
                             _this->m_bButtonRight = false;
                             gReplay->ClearButton(CONTROLKEY_LEFT);
